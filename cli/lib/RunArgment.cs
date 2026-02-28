@@ -1,4 +1,0 @@
-class ReadArgument
-{
-    public fu
-}
