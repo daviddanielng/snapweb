@@ -1,0 +1,8 @@
+# Rust build output
+/target/
+
+# Backup files created by editors
+**/*.rs.bk
+
+# macOS
+.DS_Store
