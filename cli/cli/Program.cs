@@ -4,6 +4,8 @@ internal class Program
 {
     private static async Task Main(string[] args)
     {
+        // Translator translator = new("en", "main");
+        // Console.WriteLine(translator.T("hello"));
         var config = new ReadArgument().Read(args);
         if (!config)
         {

@@ -1,0 +1,5 @@
+{
+    "$schema": "../../../../schema/cli/error.json",
+    "config.invalid": "config {file} file is invalid",
+    "config.notFound": "config {file} file not found"
+}

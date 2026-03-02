@@ -1,0 +1,19 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "properties": {
+        "language.long": {
+            "type": "string"
+        },
+        "language.short": {
+            "type": "string"
+        },
+        "hello": {
+            "type": "string"
+        }
+    },
+    "required": [
+        "language.long",
+        "language.short",
+        "hello"
+    ]
+}

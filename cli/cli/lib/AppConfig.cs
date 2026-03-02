@@ -8,13 +8,15 @@ class AppConfig
     public int Age { get; set; }
     public static AppConfig? Read(String[] args)
     {
+        // var translation = new Translator("en", "error");
+
         if (args.Length == 0)
         {
-            Console.WriteLine("No config file provided.");
+            Logging.Error("No config file provided.");
             return null;
         }
         // AppConfig config = JsonSerializer.Deserialize<AppConfig>(fs)!;
-        Console.WriteLine("Reading config...");
+        Logging.Info("Reading config...");
         return new AppConfig();
     }
 }

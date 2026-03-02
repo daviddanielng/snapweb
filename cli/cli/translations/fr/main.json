@@ -1,0 +1,6 @@
+{
+    "$schema": "../../../../schema/cli/main.json",
+    "language.long": "Français",
+    "language.short": "fr",
+    "hello": "Bonjour"
+}
