@@ -82,70 +82,7 @@ public class ReadArgsTests
         }
     }
 
-    [Fact]
-    public void Test_LanguageIsSet()
-    {
-        var tempFilePath = Path.GetTempFileName();
-        try
-        {
-            File.WriteAllText(tempFilePath, "test content");
-            var arg = new ReadArgument();
-            Assert.True(arg.Read(["--lang", "fr", "--config", tempFilePath]));
-            Assert.Equal("fr", arg.Language);
-        }
-        finally
-        {
-            File.Delete(tempFilePath);
-        }
 
-    }
-    [Fact]
-    public void Test_LanguageFlagIsNotSet()
-    {
-        var tempFilePath = Path.GetTempFileName();
-        try
-        {
-            File.WriteAllText(tempFilePath, "test content");
-            var arg = new ReadArgument();
-            Assert.True(arg.Read(["--config", tempFilePath]));
-            Assert.Equal("en", arg.Language);
-        }
-        finally
-        {
-            File.Delete(tempFilePath);
-        }
-    }
-    [Fact]
-    public void Test_LanguageDefaultsToEnglish()
-    {
-        var tempFilePath = Path.GetTempFileName();
-        try
-        {
-            File.WriteAllText(tempFilePath, "test content");
-            var arg = new ReadArgument();
-            Assert.True(arg.Read(["--config", tempFilePath]));
-            Assert.Equal("en", arg.Language);
-        }
-        finally
-        {
-            File.Delete(tempFilePath);
-        }
-    }
-    [Fact]
-    public void Test_LanguageIsInvalid()
-    {
-        var tempFilePath = Path.GetTempFileName();
-        try
-        {
-            File.WriteAllText(tempFilePath, "test content");
-            var arg = new ReadArgument();
-            Assert.False(arg.Read(["--lang", "invalid-lang", "--config", tempFilePath]));
-        }
-        finally
-        {
-            File.Delete(tempFilePath);
-        }
-    }
 
     public static TheoryData<CustomTypeWithString<string[]>> InvalidArgsTestCases =>
     [

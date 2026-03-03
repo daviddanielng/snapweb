@@ -1,6 +1,0 @@
-{
-    "$schema": "../../../../schema/cli/main.json",
-    "language.long": "English",
-    "language.short": "en",
-    "hello": "Hello"
-}

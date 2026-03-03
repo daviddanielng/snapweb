@@ -63,13 +63,13 @@ def start(argument: AllowedArguments):
     match argument:
         case "--cli-dev":
             print_to_color("Running CLI in development mode...", "cyan")
-            command = f"cd {current_dir}/cli/  && dotnet run {' '.join(remaining_args)}"
+            command = f"cd {current_dir}/cli/cli  && dotnet run {' '.join(remaining_args)}"
         case "--gui-dev":
             print_to_color("Running GUI in development mode...", "cyan")
             command = f"cd {current_dir}/gui/  && cargo run {' '.join(remaining_args)}"
         case "--cli-prod":
             print_to_color("Running CLI in production mode...", "cyan")
-            command = f"cd {current_dir}/cli/ && dotnet run --configuration Release {' '.join(remaining_args)}"
+            command = f"cd {current_dir}/cli/cli && dotnet run --configuration Release {' '.join(remaining_args)}"
         case "--gui-prod":
             print_to_color("Running GUI in production mode...", "cyan")
             command = f"cd {current_dir}/gui/ && cargo run --release {' '.join(remaining_args)}"

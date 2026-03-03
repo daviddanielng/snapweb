@@ -4,19 +4,19 @@ public class ReadArgument
 {
     public string ConfigFilePath { get; set; } = "";
     public bool Verbose = false;
-    public string Language { get; set; } = "en";
 
-    public bool Read(String[] args)
+    public bool Read(string[] args)
     {
+        Logging.Info("Reading arguments .");
         if (args.Length == 0)
         {
+            Logging.Error("No arguments provided.");
             Help();
             return false;
         }
         Dictionary<string, bool> wasLast = [];
         wasLast.Add("config", false);
         wasLast.Add("verbose", false);
-        wasLast.Add("language", false);
         foreach (var arg in args)
         {
             if (wasLast["config"] && arg.StartsWith("--"))
@@ -25,12 +25,7 @@ public class ReadArgument
                 Help();
                 return false;
             }
-            if (wasLast["language"] && arg.StartsWith("--"))
-            {
-                Logging.Error("Expected language after --lang");
-                Help();
-                return false;
-            }
+
             if (wasLast["config"])
             {
                 wasLast["config"] = false;
@@ -44,18 +39,7 @@ public class ReadArgument
                 continue;
             }
 
-            if (wasLast["language"])
-            {
-                var availableLanguages = Translator.GetAvailableLanguages();
-                if (!availableLanguages.Contains(arg))
-                {
-                    Logging.Error($"Language '{arg}' is not supported. Available languages: {string.Join(", ", availableLanguages)}");
-                    return false;
-                }
-                wasLast["language"] = false;
-                Language = arg;
-                continue;
-            }
+
             switch (arg)
             {
                 case "--config":
@@ -76,14 +60,7 @@ public class ReadArgument
                     wasLast["verbose"] = true;
                     Verbose = true;
                     break;
-                case "--lang":
-                    if (wasLast["language"])
-                    {
-                        Logging.Error("Unexpected argument --lang after language");
-                        return false;
-                    }
-                    wasLast["language"] = true;
-                    break;
+
                 default:
                     Logging.Error($"Unexpected argument {arg}");
                     return false;
@@ -115,12 +92,11 @@ public class ReadArgument
         }
         return true;
     }
-    private static string Help()
+    private static void Help()
     {
-        return "Usage: snapweb --config <config file path>  --lang <language> [--verbose]\n " +
+        Logging.Info ("Usage: snapweb --config <config file path> [--verbose]\n " +
                "Options:\n" +
                "  --config <config file path>   Path to the configuration file.\n" +
-               "  --lang <language>             Specify the language.\n" +
-               "  --verbose                     Enable verbose logging.";
+               "  --verbose                     Enable verbose logging.");
     }
 }

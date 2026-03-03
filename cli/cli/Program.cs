@@ -1,30 +1,31 @@
-﻿using cli.lib;
-using Microsoft.Playwright;
+﻿using cli.browser;
+using cli.lib;
+
 internal class Program
 {
     private static async Task Main(string[] args)
     {
-        // Translator translator = new("en", "main");
-        // Console.WriteLine(translator.T("hello"));
-        var config = new ReadArgument().Read(args);
-        if (!config)
+        var arguments = new ReadArgument(); ;
+        if (!arguments.Read(args))
         {
 
             return;
         }
-        // Console.WriteLine(args);
-        // var argument = args[0];
+        var logging = new Logging();
+        Logging.Verbose = arguments.Verbose;
+        var config = new AppConfig().ReadJson(arguments.ConfigFilePath, arguments.Verbose);
+        if (config == null)
+        {
+            return;
+        }
 
-        // using var playwright = await Playwright.CreateAsync();
-        // await using var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
-        // {
-        //     ExecutablePath = "/usr/bin/google-chrome"
-        // });
-        // var page = await browser.NewPageAsync();
-        // await page.GotoAsync("https://google.com");
-        // await page.ScreenshotAsync(new()
-        // {
-        //     Path = "/home/daniel/Documents/Projects/snapweb/temp/screenshot.png"
-        // });
+        Logging.InfoVerbose(config.SettingsToWords());
+
+        var chrome = await new Chromium(config, logging).Start();
+        await chrome.TakeScreenshot("https://playwright.dev/dotnet", 1280, 720, true);
+        // var capture = new Capture();
+        // await capture.Start();
+
+
     }
 }
