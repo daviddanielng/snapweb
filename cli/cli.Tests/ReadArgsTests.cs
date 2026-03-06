@@ -6,20 +6,50 @@ using Xunit;
 public class ReadArgsTests
 {
     [Fact]
-    public void Test_WithTempFile()
+    public void Test_XmlOutputSet()
     {
-        var tempFilePath = Path.GetTempFileName();
-        try
+        lib.Utils.CreateAndUseTempFile("test content", (tempFilePath) =>
         {
-            File.WriteAllText(tempFilePath, "test content");
             var arg = new ReadArgument();
-            Assert.True(arg.Read(["--config", tempFilePath]));
-        }
-        finally
-        {
-            File.Delete(tempFilePath);
-        }
+            Assert.True(arg.Read(["--output", "xml", "--config", tempFilePath]), $"Expected Read to return true for args: --output xml --config {tempFilePath}");
+            Assert.Equal(OutputFormat.Xml, arg.Output);
+        });
+
     }
+    [Fact]
+    public void Test_TextOutputSet()
+    {
+        lib.Utils.CreateAndUseTempFile("test content", (tempFilePath) =>
+        {
+            var arg = new ReadArgument();
+            Assert.True(arg.Read(["--output", "text", "--config", tempFilePath]), $"Expected Read to return true for args: --output text --config {tempFilePath}");
+            Assert.Equal(OutputFormat.Text, arg.Output);
+        });
+
+    }
+    [Fact]
+    public void Test_JsonOutputSet()
+    {
+        lib.Utils.CreateAndUseTempFile("test content", (tempFilePath) =>
+        {
+            var arg = new ReadArgument();
+            Assert.True(arg.Read(["--output", "json", "--config", tempFilePath]), $"Expected Read to return true for args: --output json --config {tempFilePath}");
+            Assert.Equal(OutputFormat.Json, arg.Output);
+        });
+
+    }
+
+    [Fact]
+    public void Test_ConfigValid()
+    {
+        lib.Utils.CreateAndUseTempFile("test content", (tempFilePath) =>
+        {
+            var arg = new ReadArgument();
+            Assert.True(arg.Read(["--config", tempFilePath]), $"Expected Read to return true for args: --config {tempFilePath}");
+            Assert.Equal(tempFilePath, arg.ConfigFilePath);
+        });
+    }
+
     [Fact]
     public void Test_MissingConfigPath()
     {
@@ -35,51 +65,33 @@ public class ReadArgsTests
     [Fact]
     public void Test_ConfigFilePathIsSet()
     {
-        var tempFilePath = Path.GetTempFileName();
-        try
+        lib.Utils.CreateAndUseTempFile("test content", (tempFilePath) =>
         {
-            File.WriteAllText(tempFilePath, "test content");
             var arg = new ReadArgument();
-            Assert.True(arg.Read(["--config", tempFilePath]));
+            Assert.True(arg.Read(["--config", tempFilePath]), $"Expected Read to return true for args: --config {tempFilePath}");
             Assert.Equal(tempFilePath, arg.ConfigFilePath);
-        }
-        finally
-        {
-            File.Delete(tempFilePath);
-        }
+        });
     }
     [Fact]
     public void Test_VerboseFlagIsSet()
     {
-        var tempFilePath = Path.GetTempFileName();
-        try
+        lib.Utils.CreateAndUseTempFile("test content", (tempFilePath) =>
         {
-            File.WriteAllText(tempFilePath, "test content");
             var arg = new ReadArgument();
             Assert.True(arg.Read(["--verbose", "--config", tempFilePath]));
             Assert.True(arg.Verbose);
-        }
-        finally
-        {
-            File.Delete(tempFilePath);
-        }
+        });
     }
 
     [Fact]
     public void Test_VerboseFlagIsNotSet()
     {
-        var tempFilePath = Path.GetTempFileName();
-        try
+        lib.Utils.CreateAndUseTempFile("test content", (tempFilePath) =>
         {
-            File.WriteAllText(tempFilePath, "test content");
             var arg = new ReadArgument();
             Assert.True(arg.Read(["--config", tempFilePath]));
-            Assert.False(arg.Verbose, "Expected Verbose to be false when --verbose flag is not provided");
-        }
-        finally
-        {
-            File.Delete(tempFilePath);
-        }
+            Assert.False(arg.Verbose);
+        });
     }
 
 
@@ -130,6 +142,15 @@ public class ReadArgsTests
         {
             Value = [ "--config", "config.json", "--lang" ],
             Message = "Expected Read to return false for args: --config config.json --lang"
+        },
+        new CustomTypeWithString<string[]>
+        {
+            Value = [ "--output", "invalidformat" ],
+            Message = "Expected Read to return false for args: --output invalidformat"
+        },
+        new CustomTypeWithString<string[]>        {
+            Value = [ "--output" ],
+            Message = "Expected Read to return false for args: --output"
         },
     ];
 

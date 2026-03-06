@@ -3,14 +3,13 @@ using Microsoft.Playwright;
 
 namespace cli.browser;
 
-public class Chromium(AppConfig config, Logging logging) : IBaseBrowser
+public class Chromium(AppConfig config, bool headless = true) : IBaseBrowser
 {
     public IBrowser? Browser { get; set; }
     public IPlaywright? MPlaywright { get; set; }
 
     public AppConfig Config => config;
-    public Logging Logging => logging;
-
+    public bool Headless { get; set; } = headless;
 
     public async Task<Chromium> Start()
     {
@@ -22,12 +21,13 @@ public class Chromium(AppConfig config, Logging logging) : IBaseBrowser
                 Logging.Error("Chromium executable path not found in configuration.");
                 Environment.Exit(1);
             }
-            Logging.InfoVerbose($"Launching Chromium browser with executable path: {executablePath}");
+            Logging.InfoVerbose($"Launching Chromium browser at executable path: {executablePath}");
 
             MPlaywright = await Playwright.CreateAsync();
             Browser = await MPlaywright.Chromium.LaunchAsync(new()
             {
-                ExecutablePath = executablePath
+                ExecutablePath = executablePath,
+                Headless = Headless
             });
 
             Logging.InfoVerbose("Chromium browser launched successfully.");
@@ -40,7 +40,7 @@ public class Chromium(AppConfig config, Logging logging) : IBaseBrowser
             return this;
         }
     }
-    public async Task<string?> TakeScreenshot(string url, int width, int height, bool fullPage = false)
+    public async Task<IPage?> NewPage()
     {
         if (Browser == null)
         {
@@ -49,41 +49,24 @@ public class Chromium(AppConfig config, Logging logging) : IBaseBrowser
         }
         try
         {
-            Logging.InfoVerbose($"Taking screenshot for URL {url} at {width}x{height}. Full page: {fullPage}. Browser: chrome", $"Taking screenshot for URL {url} at {width}x{height}.");
-            var timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
-            var outputPath = Path.Combine(Config.OutputDir, $"screenshot_{timestamp}_{width}x{height}.{Config.ScreenshotOptions.Format.ToLower()}");
-            var page = await Browser.NewPageAsync(new()
-            {
-                ViewportSize = new ViewportSize
-                {
-                    Width = width,
-                    Height = height
-                }
-            });
-            await page.GotoAsync(url);
-            await page.ScreenshotAsync(new()
-            {
-                Path = outputPath,
-                FullPage = fullPage,
-                Type = ScreenshotType.Png
-            });
-            await page.CloseAsync();
-            return outputPath;
+            var page = await Browser.NewPageAsync();
+            return page;
         }
         catch (Exception ex)
         {
-            Logging.ErrorVerbose($"Failed to take screenshot for URL {url} at {width}x{height}. Exception details: {ex}", $"Failed to take screenshot for URL {url} at {width}x{height}: {ex.Message}");
-
+            Logging.ErrorVerbose($"Failed to create new page in Chromium browser: {ex}", $"Failed to create new page in Chromium browser: {ex.Message}");
             return null;
         }
     }
 
     public async Task Dispose()
     {
+        Logging.InfoVerbose("Closing Chromium browser...");
         if (Browser != null)
         {
             await Browser.CloseAsync();
         }
         MPlaywright?.Dispose();
+        Logging.InfoVerbose("Chromium browser closed.");
     }
 }

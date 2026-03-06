@@ -1,19 +1,24 @@
-﻿using cli.browser;
-using cli.lib;
+﻿using cli.lib;
 
 internal class Program
 {
     private static async Task Main(string[] args)
     {
+        if (args.Contains("--schema"))
+        {
+            File.WriteAllText("appconfig.schema.json", AppConfig.GenerateJsonSchema());
+            Console.WriteLine("JSON schema for AppConfig has been generated at appconfig.schema.json");
+            return;
+        }
         var arguments = new ReadArgument(); ;
         if (!arguments.Read(args))
         {
 
             return;
         }
-        var logging = new Logging();
         Logging.Verbose = arguments.Verbose;
-        var config = new AppConfig().ReadJson(arguments.ConfigFilePath, arguments.Verbose);
+        Logging.Output = arguments.Output;
+        var config = new AppConfig().ReadJson(arguments.ConfigFilePath);
         if (config == null)
         {
             return;
@@ -21,11 +26,7 @@ internal class Program
 
         Logging.InfoVerbose(config.SettingsToWords());
 
-        var chrome = await new Chromium(config, logging).Start();
-        await chrome.TakeScreenshot("https://playwright.dev/dotnet", 1280, 720, true);
-        // var capture = new Capture();
-        // await capture.Start();
-
+        await cli.Start.Run(config);
 
     }
 }

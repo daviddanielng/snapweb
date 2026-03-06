@@ -4,6 +4,7 @@ public class ReadArgument
 {
     public string ConfigFilePath { get; set; } = "";
     public bool Verbose = false;
+    public OutputFormat Output { get; set; } = OutputFormat.Text;
 
     public bool Read(string[] args)
     {
@@ -17,6 +18,7 @@ public class ReadArgument
         Dictionary<string, bool> wasLast = [];
         wasLast.Add("config", false);
         wasLast.Add("verbose", false);
+        wasLast.Add("output", false);
         foreach (var arg in args)
         {
             if (wasLast["config"] && arg.StartsWith("--"))
@@ -25,7 +27,32 @@ public class ReadArgument
                 Help();
                 return false;
             }
-
+            if (wasLast["output"] && arg.StartsWith("--"))
+            {
+                Logging.Error("Unexpected argument after --output, expected output format");
+                Help();
+                return false;
+            }
+            if (wasLast["output"])
+            {
+                wasLast["output"] = false;
+                switch (arg)
+                {
+                    case "text":
+                        Output = OutputFormat.Text;
+                        break;
+                    case "json":
+                        Output = OutputFormat.Json;
+                        break;
+                    case "xml":
+                        Output = OutputFormat.Xml;
+                        break;
+                    default:
+                        Logging.Error($"Unexpected output format {arg}");
+                        return false;
+                }
+                continue;
+            }
             if (wasLast["config"])
             {
                 wasLast["config"] = false;
@@ -60,7 +87,14 @@ public class ReadArgument
                     wasLast["verbose"] = true;
                     Verbose = true;
                     break;
-
+                case "--output":
+                    if (wasLast["output"])
+                    {
+                        Logging.Error("Unexpected argument --output after --output");
+                        return false;
+                    }
+                    wasLast["output"] = true;
+                    break;
                 default:
                     Logging.Error($"Unexpected argument {arg}");
                     return false;
@@ -94,9 +128,16 @@ public class ReadArgument
     }
     private static void Help()
     {
-        Logging.Info ("Usage: snapweb --config <config file path> [--verbose]\n " +
+        Logging.Info("Usage: snapweb --config <config file path> [--verbose]\n " +
                "Options:\n" +
                "  --config <config file path>   Path to the configuration file.\n" +
-               "  --verbose                     Enable verbose logging.");
+               "  --verbose                     Enable verbose logging.\n" +
+               "  --output <output format>       Set output format (text, json, xml).\n" +
+               "  --schema                       Output JSON schema for the configuration file.");
+
+
+
+
     }
+
 }

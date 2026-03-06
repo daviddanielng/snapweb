@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
+using NJsonSchema;
 
 namespace cli.lib;
 
@@ -10,6 +11,7 @@ public class UrlConfig
     public string Url { get; set; } = null!;
     public bool Pause { get; set; } = false;
     public bool IncludeFullPage { get; set; } = false;
+    public string? Caption { get; set; }
     public bool Validate()
     {
 
@@ -124,9 +126,9 @@ public class ScreenConfig
 }
 public class AppConfig
 {
-    public string AppVersion { get; set; } = "0.1.0";
-    public string MinConfigVersion { get; set; } = "0.1.0";
-    public string MaxConfigVersion { get; set; } = "0.1.0";
+    public readonly string AppVersion = "0.1.0";
+    public readonly string MinConfigVersion = "0.1.0";
+    public readonly string MaxConfigVersion = "0.1.0";
 
     public JsonSerializerOptions JsonOptions { get; set; } = new JsonSerializerOptions
     {
@@ -135,6 +137,7 @@ public class AppConfig
     [Required, RegularExpression(@"^\d+\.\d+\.\d+$", ErrorMessage = "Version must be in the format x.y.z")]
     public string Version { get; set; } = null!;
     public int BrowserTimeout { get; set; } = 30000;
+
     [Required, MinLength(1, ErrorMessage = "At least one browser configuration is required"), MaxLength(3, ErrorMessage = "No more than three browser configurations are allowed")]
     public List<BrowserConfig> Browsers { get; set; } = [];
     [Required, MinLength(1, ErrorMessage = "At least one screen configuration is required"), MaxLength(15, ErrorMessage = "No more than fifteen screen configurations are allowed")]
@@ -145,7 +148,8 @@ public class AppConfig
     public string OutputDir { get; set; } = null!;
 
     public ScreenshotConfig ScreenshotOptions { get; set; } = new();
-    public AppConfig? ReadJson(string path, bool verbose = false)
+    public bool AnyHasPause => Urls.Any(url => url.Pause);
+    public AppConfig? ReadJson(string path)
     {
         Logging.InfoVerbose($"Reading config at {path}", "Reading config...");
         try
@@ -255,5 +259,10 @@ public class AppConfig
     {
         var imageCount = this.Browsers.Count * this.SaveScreenSizes.Count * this.Urls.Count;
         return $"Config version {Version} with {Browsers.Count} browsers and {SaveScreenSizes.Count} screen sizes. Output  directory: {OutputDir}. Screenshot format: {ScreenshotOptions.Format} with quality {ScreenshotOptions.Quality}. Browser timeout: {BrowserTimeout}ms. Total images to capture: {imageCount} from {Urls.Count} URLs.";
+    }
+    public static string GenerateJsonSchema()
+    {
+        var schema = JsonSchema.FromType<AppConfig>();
+        return schema.ToJson();
     }
 }

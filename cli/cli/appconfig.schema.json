@@ -1,0 +1,2475 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "AppConfig",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "Version",
+    "Browsers",
+    "SaveScreenSizes",
+    "Urls",
+    "OutputDir"
+  ],
+  "properties": {
+    "JsonOptions": {
+      "$ref": "#/definitions/JsonSerializerOptions"
+    },
+    "Version": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "BrowserTimeout": {
+      "type": "integer",
+      "format": "int32"
+    },
+    "Browsers": {
+      "type": "array",
+      "maxItems": 3,
+      "minItems": 1,
+      "items": {
+        "$ref": "#/definitions/BrowserConfig"
+      }
+    },
+    "SaveScreenSizes": {
+      "type": "array",
+      "maxItems": 15,
+      "minItems": 1,
+      "items": {
+        "$ref": "#/definitions/ScreenConfig"
+      }
+    },
+    "Urls": {
+      "type": "array",
+      "maxItems": 150,
+      "minItems": 1,
+      "items": {
+        "$ref": "#/definitions/UrlConfig"
+      }
+    },
+    "OutputDir": {
+      "type": "string",
+      "minLength": 1
+    },
+    "ScreenshotOptions": {
+      "$ref": "#/definitions/ScreenshotConfig"
+    }
+  },
+  "definitions": {
+    "JsonSerializerOptions": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "CacheContext": {
+          "$ref": "#/definitions/CachingContext"
+        },
+        "ObjectTypeInfo": {
+          "$ref": "#/definitions/JsonTypeInfo"
+        },
+        "Converters": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/JsonConverter"
+          }
+        },
+        "TypeInfoResolver": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/IJsonTypeInfoResolver"
+            }
+          ]
+        },
+        "TypeInfoResolverChain": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/IJsonTypeInfoResolver"
+          }
+        },
+        "AllowOutOfOrderMetadataProperties": {
+          "type": "boolean"
+        },
+        "AllowTrailingCommas": {
+          "type": "boolean"
+        },
+        "DefaultBufferSize": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "Encoder": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/JavaScriptEncoder"
+            }
+          ]
+        },
+        "DictionaryKeyPolicy": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/JsonNamingPolicy"
+            }
+          ]
+        },
+        "IgnoreNullValues": {
+          "type": "boolean",
+          "x-deprecated": true,
+          "x-deprecatedMessage": "JsonSerializerOptions.IgnoreNullValues is obsolete. To ignore null values when serializing, set DefaultIgnoreCondition to JsonIgnoreCondition.WhenWritingNull."
+        },
+        "DefaultIgnoreCondition": {
+          "$ref": "#/definitions/JsonIgnoreCondition"
+        },
+        "NumberHandling": {
+          "$ref": "#/definitions/JsonNumberHandling"
+        },
+        "PreferredObjectCreationHandling": {
+          "$ref": "#/definitions/JsonObjectCreationHandling"
+        },
+        "IgnoreReadOnlyProperties": {
+          "type": "boolean"
+        },
+        "IgnoreReadOnlyFields": {
+          "type": "boolean"
+        },
+        "IncludeFields": {
+          "type": "boolean"
+        },
+        "MaxDepth": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "EffectiveMaxDepth": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "PropertyNamingPolicy": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/JsonNamingPolicy"
+            }
+          ]
+        },
+        "PropertyNameCaseInsensitive": {
+          "type": "boolean"
+        },
+        "ReadCommentHandling": {
+          "$ref": "#/definitions/JsonCommentHandling"
+        },
+        "UnknownTypeHandling": {
+          "$ref": "#/definitions/JsonUnknownTypeHandling"
+        },
+        "UnmappedMemberHandling": {
+          "$ref": "#/definitions/JsonUnmappedMemberHandling"
+        },
+        "WriteIndented": {
+          "type": "boolean"
+        },
+        "IndentCharacter": {
+          "type": "string"
+        },
+        "IndentSize": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "ReferenceHandler": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/ReferenceHandler"
+            }
+          ]
+        },
+        "NewLine": {
+          "type": "string"
+        },
+        "RespectNullableAnnotations": {
+          "type": "boolean"
+        },
+        "RespectRequiredConstructorParameters": {
+          "type": "boolean"
+        },
+        "AllowDuplicateProperties": {
+          "type": "boolean"
+        },
+        "CanUseFastPathSerializationLogic": {
+          "type": "boolean"
+        },
+        "IsReadOnly": {
+          "type": "boolean"
+        }
+      }
+    },
+    "CachingContext": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Options": {
+          "$ref": "#/definitions/JsonSerializerOptions"
+        },
+        "HashCode": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "Count": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "JsonTypeInfo": {
+      "type": "object",
+      "x-abstract": true,
+      "additionalProperties": false,
+      "properties": {
+        "ParameterCount": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "ParameterCache": {
+          "$ref": "#/definitions/ReadOnlySpanOfJsonParameterInfo"
+        },
+        "UsesParameterizedConstructor": {
+          "type": "boolean"
+        },
+        "PropertyCache": {
+          "$ref": "#/definitions/ReadOnlySpanOfJsonPropertyInfo"
+        },
+        "PropertyIndex": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/JsonPropertyInfo"
+          }
+        },
+        "OptionalPropertiesMask": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {}
+        },
+        "ShouldTrackRequiredProperties": {
+          "type": "boolean"
+        },
+        "ElementType": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "KeyType": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "CreateObject": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/FuncOfObject"
+            }
+          ]
+        },
+        "CreateObjectForExtensionDataProperty": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/FuncOfObject"
+            }
+          ]
+        },
+        "OnSerializing": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/ActionOfObject"
+            }
+          ]
+        },
+        "OnSerialized": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/ActionOfObject"
+            }
+          ]
+        },
+        "OnDeserializing": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/ActionOfObject"
+            }
+          ]
+        },
+        "OnDeserialized": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/ActionOfObject"
+            }
+          ]
+        },
+        "Properties": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/JsonPropertyInfo"
+          }
+        },
+        "PropertyList": {
+          "$ref": "#/definitions/JsonPropertyInfoList"
+        },
+        "SourceGenDelayedPropertyInitializer": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/FuncOfJsonSerializerContextAndJsonPropertyInfoOf"
+            }
+          ]
+        },
+        "PolymorphismOptions": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/JsonPolymorphismOptions"
+            }
+          ]
+        },
+        "IsReadOnly": {
+          "type": "boolean"
+        },
+        "CreateObjectWithArgs": {
+          "oneOf": [
+            {},
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "AddMethodDelegate": {
+          "oneOf": [
+            {},
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "ExtensionDataProperty": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/JsonPropertyInfo"
+            }
+          ]
+        },
+        "PolymorphicTypeResolver": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/PolymorphicTypeResolver"
+            }
+          ]
+        },
+        "HasSerializeHandler": {
+          "type": "boolean"
+        },
+        "CanUseSerializeHandler": {
+          "type": "boolean"
+        },
+        "PropertyMetadataSerializationNotSupported": {
+          "type": "boolean"
+        },
+        "IsNullable": {
+          "type": "boolean"
+        },
+        "ElementTypeInfo": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/JsonTypeInfo"
+            }
+          ]
+        },
+        "KeyTypeInfo": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/JsonTypeInfo"
+            }
+          ]
+        },
+        "Options": {
+          "$ref": "#/definitions/JsonSerializerOptions"
+        },
+        "Type": {
+          "type": "string"
+        },
+        "Converter": {
+          "$ref": "#/definitions/JsonConverter"
+        },
+        "Kind": {
+          "$ref": "#/definitions/JsonTypeInfoKind"
+        },
+        "PropertyInfoForTypeInfo": {
+          "$ref": "#/definitions/JsonPropertyInfo"
+        },
+        "NumberHandling": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/JsonNumberHandling"
+            }
+          ]
+        },
+        "EffectiveNumberHandling": {
+          "$ref": "#/definitions/JsonNumberHandling"
+        },
+        "UnmappedMemberHandling": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/JsonUnmappedMemberHandling"
+            }
+          ]
+        },
+        "EffectiveUnmappedMemberHandling": {
+          "$ref": "#/definitions/JsonUnmappedMemberHandling"
+        },
+        "PreferredPropertyObjectCreationHandling": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/JsonObjectCreationHandling"
+            }
+          ]
+        },
+        "OriginatingResolver": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/IJsonTypeInfoResolver"
+            }
+          ]
+        },
+        "ConstructorAttributeProvider": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/ICustomAttributeProvider"
+            }
+          ]
+        },
+        "IsCustomized": {
+          "type": "boolean"
+        },
+        "IsConfigured": {
+          "type": "boolean"
+        },
+        "AncestorPolymorphicType": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/JsonTypeInfo"
+            }
+          ]
+        },
+        "SupportsPolymorphicDeserialization": {
+          "type": "boolean"
+        }
+      }
+    },
+    "ReadOnlySpanOfJsonParameterInfo": {
+      "type": "object",
+      "x-deprecated": true,
+      "x-deprecatedMessage": "Types with embedded references are not supported in this version of your compiler.",
+      "additionalProperties": false,
+      "properties": {
+        "Length": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "IsEmpty": {
+          "type": "boolean"
+        }
+      }
+    },
+    "ReadOnlySpanOfJsonPropertyInfo": {
+      "type": "object",
+      "x-deprecated": true,
+      "x-deprecatedMessage": "Types with embedded references are not supported in this version of your compiler.",
+      "additionalProperties": false,
+      "properties": {
+        "Length": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "IsEmpty": {
+          "type": "boolean"
+        }
+      }
+    },
+    "JsonPropertyInfo": {
+      "type": "object",
+      "x-abstract": true,
+      "additionalProperties": false,
+      "properties": {
+        "DeclaringTypeInfo": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/JsonTypeInfo"
+            }
+          ]
+        },
+        "EffectiveConverter": {
+          "$ref": "#/definitions/JsonConverter"
+        },
+        "CustomConverter": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/JsonConverter"
+            }
+          ]
+        },
+        "Get": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/FuncOfObjectAndObject"
+            }
+          ]
+        },
+        "Set": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/ActionOfObjectAndObject"
+            }
+          ]
+        },
+        "ShouldSerialize": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/FuncOfObjectAndObjectAndBoolean"
+            }
+          ]
+        },
+        "IgnoreCondition": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/JsonIgnoreCondition"
+            }
+          ]
+        },
+        "AttributeProvider": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/ICustomAttributeProvider"
+            }
+          ]
+        },
+        "ObjectCreationHandling": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/JsonObjectCreationHandling"
+            }
+          ]
+        },
+        "EffectiveObjectCreationHandling": {
+          "$ref": "#/definitions/JsonObjectCreationHandling"
+        },
+        "MemberName": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "MemberType": {
+          "$ref": "#/definitions/MemberTypes"
+        },
+        "IsVirtual": {
+          "type": "boolean"
+        },
+        "IsGetNullable": {
+          "type": "boolean"
+        },
+        "IsSetNullable": {
+          "type": "boolean"
+        },
+        "IsExtensionData": {
+          "type": "boolean"
+        },
+        "IsRequired": {
+          "type": "boolean"
+        },
+        "AssociatedParameter": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/JsonParameterInfo"
+            }
+          ]
+        },
+        "DeclaringType": {
+          "type": "string"
+        },
+        "PropertyType": {
+          "type": "string"
+        },
+        "HasGetter": {
+          "type": "boolean"
+        },
+        "HasSetter": {
+          "type": "boolean"
+        },
+        "IgnoreNullTokensOnRead": {
+          "type": "boolean"
+        },
+        "IgnoreDefaultValuesOnWrite": {
+          "type": "boolean"
+        },
+        "IgnoreReadOnlyMember": {
+          "type": "boolean"
+        },
+        "IsForTypeInfo": {
+          "type": "boolean"
+        },
+        "Name": {
+          "type": "string"
+        },
+        "NameAsUtf8Bytes": {
+          "type": "string",
+          "format": "byte"
+        },
+        "EscapedNameSection": {
+          "type": "string",
+          "format": "byte"
+        },
+        "Options": {
+          "$ref": "#/definitions/JsonSerializerOptions"
+        },
+        "Order": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "JsonTypeInfo": {
+          "$ref": "#/definitions/JsonTypeInfo"
+        },
+        "IsPropertyTypeInfoConfigured": {
+          "type": "boolean"
+        },
+        "IsIgnored": {
+          "type": "boolean"
+        },
+        "CanSerialize": {
+          "type": "boolean"
+        },
+        "CanDeserialize": {
+          "type": "boolean"
+        },
+        "CanDeserializeOrPopulate": {
+          "type": "boolean"
+        },
+        "SrcGen_HasJsonInclude": {
+          "type": "boolean"
+        },
+        "SrcGen_IsPublic": {
+          "type": "boolean"
+        },
+        "NumberHandling": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/JsonNumberHandling"
+            }
+          ]
+        },
+        "EffectiveNumberHandling": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/JsonNumberHandling"
+            }
+          ]
+        },
+        "PropertyTypeCanBeNull": {
+          "type": "boolean"
+        },
+        "PropertyIndex": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "JsonConverter": {
+      "type": "object",
+      "x-abstract": true,
+      "additionalProperties": false,
+      "properties": {
+        "Type": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "ConverterStrategy": {
+          "$ref": "#/definitions/ConverterStrategy"
+        },
+        "SupportsCreateObjectDelegate": {
+          "type": "boolean"
+        },
+        "CanPopulate": {
+          "type": "boolean"
+        },
+        "CanUseDirectReadOrWrite": {
+          "type": "boolean"
+        },
+        "CanHaveMetadata": {
+          "type": "boolean"
+        },
+        "CanBePolymorphic": {
+          "type": "boolean"
+        },
+        "RequiresReadAhead": {
+          "type": "boolean"
+        },
+        "IsRootLevelMultiContentStreamingConverter": {
+          "type": "boolean"
+        },
+        "UsesDefaultHandleNull": {
+          "type": "boolean"
+        },
+        "HandleNullOnRead": {
+          "type": "boolean"
+        },
+        "HandleNullOnWrite": {
+          "type": "boolean"
+        },
+        "SourceConverterForCastingConverter": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/JsonConverter"
+            }
+          ]
+        },
+        "ElementType": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "KeyType": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "NullableElementConverter": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/JsonConverter"
+            }
+          ]
+        },
+        "IsValueType": {
+          "type": "boolean"
+        },
+        "IsInternalConverter": {
+          "type": "boolean"
+        },
+        "IsInternalConverterForNumberType": {
+          "type": "boolean"
+        },
+        "IsConvertibleCollection": {
+          "type": "boolean"
+        },
+        "ConstructorIsParameterized": {
+          "type": "boolean"
+        },
+        "ConstructorInfo": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/ConstructorInfo"
+            }
+          ]
+        }
+      }
+    },
+    "ConverterStrategy": {
+      "type": "integer",
+      "description": "",
+      "x-enumNames": [
+        "None",
+        "Object",
+        "Value",
+        "Enumerable",
+        "Dictionary"
+      ],
+      "enum": [
+        0,
+        1,
+        2,
+        8,
+        16
+      ]
+    },
+    "ConstructorInfo": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/MethodBase"
+        },
+        {
+          "type": "object",
+          "x-abstract": true,
+          "additionalProperties": false,
+          "properties": {
+            "MemberType": {
+              "$ref": "#/definitions/MemberTypes"
+            }
+          }
+        }
+      ]
+    },
+    "MemberTypes": {
+      "type": "integer",
+      "description": "",
+      "x-enumFlags": true,
+      "x-enumNames": [
+        "Constructor",
+        "Event",
+        "Field",
+        "Method",
+        "Property",
+        "TypeInfo",
+        "Custom",
+        "NestedType",
+        "All"
+      ],
+      "enum": [
+        1,
+        2,
+        4,
+        8,
+        16,
+        32,
+        64,
+        128,
+        191
+      ]
+    },
+    "MethodBase": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/MemberInfo"
+        },
+        {
+          "type": "object",
+          "x-abstract": true,
+          "additionalProperties": false,
+          "properties": {
+            "Attributes": {
+              "$ref": "#/definitions/MethodAttributes"
+            },
+            "MethodImplementationFlags": {
+              "$ref": "#/definitions/MethodImplAttributes"
+            },
+            "CallingConvention": {
+              "$ref": "#/definitions/CallingConventions"
+            },
+            "IsAbstract": {
+              "type": "boolean"
+            },
+            "IsConstructor": {
+              "type": "boolean"
+            },
+            "IsFinal": {
+              "type": "boolean"
+            },
+            "IsHideBySig": {
+              "type": "boolean"
+            },
+            "IsSpecialName": {
+              "type": "boolean"
+            },
+            "IsStatic": {
+              "type": "boolean"
+            },
+            "IsVirtual": {
+              "type": "boolean"
+            },
+            "IsAssembly": {
+              "type": "boolean"
+            },
+            "IsFamily": {
+              "type": "boolean"
+            },
+            "IsFamilyAndAssembly": {
+              "type": "boolean"
+            },
+            "IsFamilyOrAssembly": {
+              "type": "boolean"
+            },
+            "IsPrivate": {
+              "type": "boolean"
+            },
+            "IsPublic": {
+              "type": "boolean"
+            },
+            "IsConstructedGenericMethod": {
+              "type": "boolean"
+            },
+            "IsGenericMethod": {
+              "type": "boolean"
+            },
+            "IsGenericMethodDefinition": {
+              "type": "boolean"
+            },
+            "ContainsGenericParameters": {
+              "type": "boolean"
+            },
+            "MethodHandle": {
+              "$ref": "#/definitions/RuntimeMethodHandle"
+            },
+            "IsSecurityCritical": {
+              "type": "boolean"
+            },
+            "IsSecuritySafeCritical": {
+              "type": "boolean"
+            },
+            "IsSecurityTransparent": {
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    },
+    "MethodAttributes": {
+      "type": "integer",
+      "description": "",
+      "x-enumFlags": true,
+      "x-enumNames": [
+        "PrivateScope",
+        "ReuseSlot",
+        "Private",
+        "FamANDAssem",
+        "Assembly",
+        "Family",
+        "FamORAssem",
+        "Public",
+        "MemberAccessMask",
+        "UnmanagedExport",
+        "Static",
+        "Final",
+        "Virtual",
+        "HideBySig",
+        "NewSlot",
+        "VtableLayoutMask",
+        "CheckAccessOnOverride",
+        "Abstract",
+        "SpecialName",
+        "RTSpecialName",
+        "PinvokeImpl",
+        "HasSecurity",
+        "RequireSecObject",
+        "ReservedMask"
+      ],
+      "enum": [
+        0,
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        16,
+        32,
+        64,
+        128,
+        256,
+        256,
+        512,
+        1024,
+        2048,
+        4096,
+        8192,
+        16384,
+        32768,
+        53248
+      ]
+    },
+    "MethodImplAttributes": {
+      "type": "integer",
+      "description": "",
+      "x-enumNames": [
+        "IL",
+        "Managed",
+        "Native",
+        "OPTIL",
+        "CodeTypeMask",
+        "Runtime",
+        "ManagedMask",
+        "Unmanaged",
+        "NoInlining",
+        "ForwardRef",
+        "Synchronized",
+        "NoOptimization",
+        "PreserveSig",
+        "AggressiveInlining",
+        "AggressiveOptimization",
+        "InternalCall",
+        "Async",
+        "MaxMethodImplVal"
+      ],
+      "enum": [
+        0,
+        0,
+        1,
+        2,
+        3,
+        3,
+        4,
+        4,
+        8,
+        16,
+        32,
+        64,
+        128,
+        256,
+        512,
+        4096,
+        8192,
+        65535
+      ]
+    },
+    "CallingConventions": {
+      "type": "integer",
+      "description": "",
+      "x-enumFlags": true,
+      "x-enumNames": [
+        "Standard",
+        "VarArgs",
+        "Any",
+        "HasThis",
+        "ExplicitThis"
+      ],
+      "enum": [
+        1,
+        2,
+        3,
+        32,
+        64
+      ]
+    },
+    "RuntimeMethodHandle": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Value": {
+          "$ref": "#/definitions/IntPtr"
+        }
+      }
+    },
+    "IntPtr": {
+      "type": "object",
+      "additionalProperties": false
+    },
+    "MemberInfo": {
+      "type": "object",
+      "x-abstract": true,
+      "additionalProperties": false,
+      "properties": {
+        "MemberType": {
+          "$ref": "#/definitions/MemberTypes"
+        },
+        "Name": {
+          "type": "string"
+        },
+        "DeclaringType": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "ReflectedType": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "Module": {
+          "$ref": "#/definitions/Module"
+        },
+        "CustomAttributes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CustomAttributeData"
+          }
+        },
+        "IsCollectible": {
+          "type": "boolean"
+        },
+        "MetadataToken": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "Module": {
+      "type": "object",
+      "x-abstract": true,
+      "additionalProperties": false,
+      "properties": {
+        "Assembly": {
+          "$ref": "#/definitions/Assembly"
+        },
+        "FullyQualifiedName": {
+          "type": "string"
+        },
+        "Name": {
+          "type": "string"
+        },
+        "MDStreamVersion": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "ModuleVersionId": {
+          "type": "string",
+          "format": "guid"
+        },
+        "ScopeName": {
+          "type": "string"
+        },
+        "ModuleHandle": {
+          "$ref": "#/definitions/ModuleHandle"
+        },
+        "CustomAttributes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CustomAttributeData"
+          }
+        },
+        "MetadataToken": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "Assembly": {
+      "type": "object",
+      "x-abstract": true,
+      "additionalProperties": false,
+      "properties": {
+        "DefinedTypes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TypeInfo"
+          }
+        },
+        "ExportedTypes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "CodeBase": {
+          "type": [
+            "null",
+            "string"
+          ],
+          "x-deprecated": true,
+          "x-deprecatedMessage": "Assembly.CodeBase and Assembly.EscapedCodeBase are only included for .NET Framework compatibility. Use Assembly.Location."
+        },
+        "EntryPoint": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/MethodInfo"
+            }
+          ]
+        },
+        "FullName": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "ImageRuntimeVersion": {
+          "type": "string"
+        },
+        "IsDynamic": {
+          "type": "boolean"
+        },
+        "Location": {
+          "type": "string"
+        },
+        "ReflectionOnly": {
+          "type": "boolean"
+        },
+        "IsCollectible": {
+          "type": "boolean"
+        },
+        "IsFullyTrusted": {
+          "type": "boolean"
+        },
+        "CustomAttributes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CustomAttributeData"
+          }
+        },
+        "EscapedCodeBase": {
+          "type": "string",
+          "x-deprecated": true,
+          "x-deprecatedMessage": "Assembly.CodeBase and Assembly.EscapedCodeBase are only included for .NET Framework compatibility. Use Assembly.Location."
+        },
+        "ManifestModule": {
+          "$ref": "#/definitions/Module"
+        },
+        "Modules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Module"
+          }
+        },
+        "GlobalAssemblyCache": {
+          "type": "boolean",
+          "x-deprecated": true,
+          "x-deprecatedMessage": "The Global Assembly Cache is not supported."
+        },
+        "HostContext": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "SecurityRuleSet": {
+          "$ref": "#/definitions/SecurityRuleSet"
+        }
+      }
+    },
+    "TypeInfo": {
+      "allOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "object",
+          "x-abstract": true,
+          "additionalProperties": false,
+          "properties": {
+            "GenericTypeParameters": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "DeclaredConstructors": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ConstructorInfo"
+              }
+            },
+            "DeclaredEvents": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/EventInfo"
+              }
+            },
+            "DeclaredFields": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/FieldInfo"
+              }
+            },
+            "DeclaredMembers": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/MemberInfo"
+              }
+            },
+            "DeclaredMethods": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/MethodInfo"
+              }
+            },
+            "DeclaredNestedTypes": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/TypeInfo"
+              }
+            },
+            "DeclaredProperties": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/PropertyInfo"
+              }
+            },
+            "ImplementedInterfaces": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "EventInfo": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/MemberInfo"
+        },
+        {
+          "type": "object",
+          "x-abstract": true,
+          "additionalProperties": false,
+          "properties": {
+            "MemberType": {
+              "$ref": "#/definitions/MemberTypes"
+            },
+            "Attributes": {
+              "$ref": "#/definitions/EventAttributes"
+            },
+            "IsSpecialName": {
+              "type": "boolean"
+            },
+            "AddMethod": {
+              "oneOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "$ref": "#/definitions/MethodInfo"
+                }
+              ]
+            },
+            "RemoveMethod": {
+              "oneOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "$ref": "#/definitions/MethodInfo"
+                }
+              ]
+            },
+            "RaiseMethod": {
+              "oneOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "$ref": "#/definitions/MethodInfo"
+                }
+              ]
+            },
+            "IsMulticast": {
+              "type": "boolean"
+            },
+            "EventHandlerType": {
+              "type": [
+                "null",
+                "string"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "EventAttributes": {
+      "type": "integer",
+      "description": "",
+      "x-enumFlags": true,
+      "x-enumNames": [
+        "None",
+        "SpecialName",
+        "RTSpecialName",
+        "ReservedMask"
+      ],
+      "enum": [
+        0,
+        512,
+        1024,
+        1024
+      ]
+    },
+    "MethodInfo": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/MethodBase"
+        },
+        {
+          "type": "object",
+          "x-abstract": true,
+          "additionalProperties": false,
+          "properties": {
+            "MemberType": {
+              "$ref": "#/definitions/MemberTypes"
+            },
+            "ReturnParameter": {
+              "$ref": "#/definitions/ParameterInfo"
+            },
+            "ReturnType": {
+              "type": "string"
+            },
+            "ReturnTypeCustomAttributes": {
+              "$ref": "#/definitions/ICustomAttributeProvider"
+            },
+            "GenericParameterCount": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        }
+      ]
+    },
+    "ParameterInfo": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Attributes": {
+          "$ref": "#/definitions/ParameterAttributes"
+        },
+        "Member": {
+          "$ref": "#/definitions/MemberInfo"
+        },
+        "Name": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "ParameterType": {
+          "type": "string"
+        },
+        "Position": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "IsIn": {
+          "type": "boolean"
+        },
+        "IsLcid": {
+          "type": "boolean"
+        },
+        "IsOptional": {
+          "type": "boolean"
+        },
+        "IsOut": {
+          "type": "boolean"
+        },
+        "IsRetval": {
+          "type": "boolean"
+        },
+        "DefaultValue": {
+          "oneOf": [
+            {},
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "RawDefaultValue": {
+          "oneOf": [
+            {},
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "HasDefaultValue": {
+          "type": "boolean"
+        },
+        "CustomAttributes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CustomAttributeData"
+          }
+        },
+        "MetadataToken": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "ParameterAttributes": {
+      "type": "integer",
+      "description": "",
+      "x-enumFlags": true,
+      "x-enumNames": [
+        "None",
+        "In",
+        "Out",
+        "Lcid",
+        "Retval",
+        "Optional",
+        "HasDefault",
+        "HasFieldMarshal",
+        "Reserved3",
+        "Reserved4",
+        "ReservedMask"
+      ],
+      "enum": [
+        0,
+        1,
+        2,
+        4,
+        8,
+        16,
+        4096,
+        8192,
+        16384,
+        32768,
+        61440
+      ]
+    },
+    "CustomAttributeData": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "AttributeType": {
+          "type": "string"
+        },
+        "Constructor": {
+          "$ref": "#/definitions/ConstructorInfo"
+        },
+        "ConstructorArguments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CustomAttributeTypedArgument"
+          }
+        },
+        "NamedArguments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CustomAttributeNamedArgument"
+          }
+        }
+      }
+    },
+    "CustomAttributeTypedArgument": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "ArgumentType": {
+          "type": "string"
+        },
+        "Value": {
+          "oneOf": [
+            {},
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "CustomAttributeNamedArgument": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "ArgumentType": {
+          "type": "string"
+        },
+        "MemberInfo": {
+          "$ref": "#/definitions/MemberInfo"
+        },
+        "TypedValue": {
+          "$ref": "#/definitions/CustomAttributeTypedArgument"
+        },
+        "MemberName": {
+          "type": "string"
+        },
+        "IsField": {
+          "type": "boolean"
+        }
+      }
+    },
+    "ICustomAttributeProvider": {
+      "type": "object",
+      "x-abstract": true,
+      "additionalProperties": false
+    },
+    "FieldInfo": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/MemberInfo"
+        },
+        {
+          "type": "object",
+          "x-abstract": true,
+          "additionalProperties": false,
+          "properties": {
+            "MemberType": {
+              "$ref": "#/definitions/MemberTypes"
+            },
+            "Attributes": {
+              "$ref": "#/definitions/FieldAttributes"
+            },
+            "FieldType": {
+              "type": "string"
+            },
+            "IsInitOnly": {
+              "type": "boolean"
+            },
+            "IsLiteral": {
+              "type": "boolean"
+            },
+            "IsNotSerialized": {
+              "type": "boolean",
+              "x-deprecated": true,
+              "x-deprecatedMessage": "Formatter-based serialization is obsolete and should not be used."
+            },
+            "IsPinvokeImpl": {
+              "type": "boolean"
+            },
+            "IsSpecialName": {
+              "type": "boolean"
+            },
+            "IsStatic": {
+              "type": "boolean"
+            },
+            "IsAssembly": {
+              "type": "boolean"
+            },
+            "IsFamily": {
+              "type": "boolean"
+            },
+            "IsFamilyAndAssembly": {
+              "type": "boolean"
+            },
+            "IsFamilyOrAssembly": {
+              "type": "boolean"
+            },
+            "IsPrivate": {
+              "type": "boolean"
+            },
+            "IsPublic": {
+              "type": "boolean"
+            },
+            "IsSecurityCritical": {
+              "type": "boolean"
+            },
+            "IsSecuritySafeCritical": {
+              "type": "boolean"
+            },
+            "IsSecurityTransparent": {
+              "type": "boolean"
+            },
+            "FieldHandle": {
+              "$ref": "#/definitions/RuntimeFieldHandle"
+            }
+          }
+        }
+      ]
+    },
+    "FieldAttributes": {
+      "type": "integer",
+      "description": "",
+      "x-enumFlags": true,
+      "x-enumNames": [
+        "PrivateScope",
+        "Private",
+        "FamANDAssem",
+        "Assembly",
+        "Family",
+        "FamORAssem",
+        "Public",
+        "FieldAccessMask",
+        "Static",
+        "InitOnly",
+        "Literal",
+        "NotSerialized",
+        "HasFieldRVA",
+        "SpecialName",
+        "RTSpecialName",
+        "HasFieldMarshal",
+        "PinvokeImpl",
+        "HasDefault",
+        "ReservedMask"
+      ],
+      "enum": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        16,
+        32,
+        64,
+        128,
+        256,
+        512,
+        1024,
+        4096,
+        8192,
+        32768,
+        38144
+      ]
+    },
+    "RuntimeFieldHandle": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Value": {
+          "$ref": "#/definitions/IntPtr"
+        }
+      }
+    },
+    "PropertyInfo": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/MemberInfo"
+        },
+        {
+          "type": "object",
+          "x-abstract": true,
+          "additionalProperties": false,
+          "properties": {
+            "MemberType": {
+              "$ref": "#/definitions/MemberTypes"
+            },
+            "PropertyType": {
+              "type": "string"
+            },
+            "Attributes": {
+              "$ref": "#/definitions/PropertyAttributes"
+            },
+            "IsSpecialName": {
+              "type": "boolean"
+            },
+            "CanRead": {
+              "type": "boolean"
+            },
+            "CanWrite": {
+              "type": "boolean"
+            },
+            "GetMethod": {
+              "oneOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "$ref": "#/definitions/MethodInfo"
+                }
+              ]
+            },
+            "SetMethod": {
+              "oneOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "$ref": "#/definitions/MethodInfo"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "PropertyAttributes": {
+      "type": "integer",
+      "description": "",
+      "x-enumFlags": true,
+      "x-enumNames": [
+        "None",
+        "SpecialName",
+        "RTSpecialName",
+        "HasDefault",
+        "Reserved2",
+        "Reserved3",
+        "Reserved4",
+        "ReservedMask"
+      ],
+      "enum": [
+        0,
+        512,
+        1024,
+        4096,
+        8192,
+        16384,
+        32768,
+        62464
+      ]
+    },
+    "SecurityRuleSet": {
+      "type": "integer",
+      "description": "",
+      "x-enumNames": [
+        "None",
+        "Level1",
+        "Level2"
+      ],
+      "enum": [
+        0,
+        1,
+        2
+      ]
+    },
+    "ModuleHandle": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "MDStreamVersion": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "FuncOfObjectAndObject": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/MulticastDelegate"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false
+        }
+      ]
+    },
+    "MulticastDelegate": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/Delegate"
+        },
+        {
+          "type": "object",
+          "x-abstract": true,
+          "additionalProperties": false,
+          "properties": {
+            "HasSingleTarget": {
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    },
+    "Delegate": {
+      "type": "object",
+      "x-abstract": true,
+      "additionalProperties": false,
+      "properties": {
+        "Target": {
+          "oneOf": [
+            {},
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "HasSingleTarget": {
+          "type": "boolean"
+        },
+        "Method": {
+          "$ref": "#/definitions/MethodInfo"
+        }
+      }
+    },
+    "ActionOfObjectAndObject": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/MulticastDelegate"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false
+        }
+      ]
+    },
+    "FuncOfObjectAndObjectAndBoolean": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/MulticastDelegate"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false
+        }
+      ]
+    },
+    "JsonIgnoreCondition": {
+      "type": "integer",
+      "description": "",
+      "x-enumNames": [
+        "Never",
+        "Always",
+        "WhenWritingDefault",
+        "WhenWritingNull",
+        "WhenWriting",
+        "WhenReading"
+      ],
+      "enum": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    "JsonObjectCreationHandling": {
+      "type": "integer",
+      "description": "",
+      "x-enumNames": [
+        "Replace",
+        "Populate"
+      ],
+      "enum": [
+        0,
+        1
+      ]
+    },
+    "JsonParameterInfo": {
+      "type": "object",
+      "x-abstract": true,
+      "additionalProperties": false,
+      "properties": {
+        "DeclaringType": {
+          "type": "string"
+        },
+        "Position": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "ParameterType": {
+          "type": "string"
+        },
+        "Name": {
+          "type": "string"
+        },
+        "HasDefaultValue": {
+          "type": "boolean"
+        },
+        "DefaultValue": {
+          "oneOf": [
+            {},
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "EffectiveDefaultValue": {
+          "oneOf": [
+            {},
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "IsNullable": {
+          "type": "boolean"
+        },
+        "IsMemberInitializer": {
+          "type": "boolean"
+        },
+        "AttributeProvider": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/ICustomAttributeProvider"
+            }
+          ]
+        },
+        "MatchingProperty": {
+          "$ref": "#/definitions/JsonPropertyInfo"
+        },
+        "EffectiveConverter": {
+          "$ref": "#/definitions/JsonConverter"
+        },
+        "IgnoreNullTokensOnRead": {
+          "type": "boolean"
+        },
+        "Options": {
+          "$ref": "#/definitions/JsonSerializerOptions"
+        },
+        "JsonNameAsUtf8Bytes": {
+          "type": "string",
+          "format": "byte"
+        },
+        "NumberHandling": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/JsonNumberHandling"
+            }
+          ]
+        },
+        "JsonTypeInfo": {
+          "$ref": "#/definitions/JsonTypeInfo"
+        },
+        "ShouldDeserialize": {
+          "type": "boolean"
+        },
+        "IsRequiredParameter": {
+          "type": "boolean"
+        }
+      }
+    },
+    "JsonNumberHandling": {
+      "type": "integer",
+      "description": "",
+      "x-enumFlags": true,
+      "x-enumNames": [
+        "Strict",
+        "AllowReadingFromString",
+        "WriteAsString",
+        "AllowNamedFloatingPointLiterals"
+      ],
+      "enum": [
+        0,
+        1,
+        2,
+        4
+      ]
+    },
+    "FuncOfObject": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/MulticastDelegate"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false
+        }
+      ]
+    },
+    "ActionOfObject": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/MulticastDelegate"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false
+        }
+      ]
+    },
+    "JsonPropertyInfoList": {
+      "allOf": [
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/JsonPropertyInfo"
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "IsReadOnly": {
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    },
+    "FuncOfJsonSerializerContextAndJsonPropertyInfoOf": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/MulticastDelegate"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false
+        }
+      ]
+    },
+    "JsonPolymorphismOptions": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "DerivedTypes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/JsonDerivedType"
+          }
+        },
+        "IgnoreUnrecognizedTypeDiscriminators": {
+          "type": "boolean"
+        },
+        "UnknownDerivedTypeHandling": {
+          "$ref": "#/definitions/JsonUnknownDerivedTypeHandling"
+        },
+        "TypeDiscriminatorPropertyName": {
+          "type": "string"
+        },
+        "DeclaringTypeInfo": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/JsonTypeInfo"
+            }
+          ]
+        }
+      }
+    },
+    "JsonDerivedType": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "DerivedType": {
+          "type": "string"
+        },
+        "TypeDiscriminator": {
+          "oneOf": [
+            {},
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "JsonUnknownDerivedTypeHandling": {
+      "type": "integer",
+      "description": "",
+      "x-enumNames": [
+        "FailSerialization",
+        "FallBackToBaseType",
+        "FallBackToNearestAncestor"
+      ],
+      "enum": [
+        0,
+        1,
+        2
+      ]
+    },
+    "PolymorphicTypeResolver": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "BaseType": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "UnknownDerivedTypeHandling": {
+          "$ref": "#/definitions/JsonUnknownDerivedTypeHandling"
+        },
+        "UsesTypeDiscriminators": {
+          "type": "boolean"
+        },
+        "IgnoreUnrecognizedTypeDiscriminators": {
+          "type": "boolean"
+        },
+        "CustomTypeDiscriminatorPropertyNameUtf8": {
+          "type": [
+            "null",
+            "string"
+          ],
+          "format": "byte"
+        },
+        "CustomTypeDiscriminatorPropertyNameJsonEncoded": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/JsonEncodedText"
+            }
+          ]
+        }
+      }
+    },
+    "JsonEncodedText": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "EncodedUtf8Bytes": {
+          "$ref": "#/definitions/ReadOnlySpanOfByte"
+        },
+        "Value": {
+          "type": "string"
+        }
+      }
+    },
+    "ReadOnlySpanOfByte": {
+      "type": "object",
+      "x-deprecated": true,
+      "x-deprecatedMessage": "Types with embedded references are not supported in this version of your compiler.",
+      "additionalProperties": false,
+      "properties": {
+        "Length": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "IsEmpty": {
+          "type": "boolean"
+        }
+      }
+    },
+    "JsonTypeInfoKind": {
+      "type": "integer",
+      "description": "",
+      "x-enumNames": [
+        "None",
+        "Object",
+        "Enumerable",
+        "Dictionary"
+      ],
+      "enum": [
+        0,
+        1,
+        2,
+        3
+      ]
+    },
+    "JsonUnmappedMemberHandling": {
+      "type": "integer",
+      "description": "",
+      "x-enumNames": [
+        "Skip",
+        "Disallow"
+      ],
+      "enum": [
+        0,
+        1
+      ]
+    },
+    "IJsonTypeInfoResolver": {
+      "type": "object",
+      "x-abstract": true,
+      "additionalProperties": false
+    },
+    "JavaScriptEncoder": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/TextEncoder"
+        },
+        {
+          "type": "object",
+          "x-abstract": true,
+          "additionalProperties": false
+        }
+      ]
+    },
+    "TextEncoder": {
+      "type": "object",
+      "x-abstract": true,
+      "additionalProperties": false,
+      "properties": {
+        "MaxOutputCharactersPerInputCharacter": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "JsonNamingPolicy": {
+      "type": "object",
+      "x-abstract": true,
+      "additionalProperties": false
+    },
+    "JsonCommentHandling": {
+      "type": "integer",
+      "description": "",
+      "x-enumNames": [
+        "Disallow",
+        "Skip",
+        "Allow"
+      ],
+      "enum": [
+        0,
+        1,
+        2
+      ]
+    },
+    "JsonUnknownTypeHandling": {
+      "type": "integer",
+      "description": "",
+      "x-enumNames": [
+        "JsonElement",
+        "JsonNode"
+      ],
+      "enum": [
+        0,
+        1
+      ]
+    },
+    "ReferenceHandler": {
+      "type": "object",
+      "x-abstract": true,
+      "additionalProperties": false
+    },
+    "BrowserConfig": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "Name",
+        "ExecutablePath"
+      ],
+      "properties": {
+        "Name": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^(?i)(chromium|firefox|webkit)$"
+        },
+        "ExecutablePath": {
+          "type": "string",
+          "minLength": 3
+        }
+      }
+    },
+    "ScreenConfig": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "Width",
+        "Height"
+      ],
+      "properties": {
+        "Width": {
+          "type": "integer",
+          "format": "int32",
+          "maximum": 2147483647.0,
+          "minimum": 1.0
+        },
+        "Height": {
+          "type": "integer",
+          "format": "int32",
+          "maximum": 2147483647.0,
+          "minimum": 1.0
+        }
+      }
+    },
+    "UrlConfig": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "Url"
+      ],
+      "properties": {
+        "Url": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^(https?://)?([\\w-]+(\\.[\\w-]+)+)(/[\\w-./?%&=]*)?$"
+        },
+        "Pause": {
+          "type": "boolean"
+        },
+        "IncludeFullPage": {
+          "type": "boolean"
+        }
+      }
+    },
+    "ScreenshotConfig": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "Quality",
+        "Format"
+      ],
+      "properties": {
+        "Quality": {
+          "type": "integer",
+          "format": "int32",
+          "maximum": 100.0,
+          "minimum": 1.0
+        },
+        "Format": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^(?i)(png|jpeg)$"
+        }
+      }
+    }
+  }
+}
