@@ -10,7 +10,7 @@ public class UrlConfig
     [Required, RegularExpression(@"^(https?://)?([\w-]+(\.[\w-]+)+)(/[\w-./?%&=]*)?$", ErrorMessage = "Invalid URL format")]
     public string Url { get; set; } = null!;
     public bool Pause { get; set; } = false;
-    public bool IncludeFullPage { get; set; } = false;
+    public bool FullPage { get; set; } = false;
     public string? Caption { get; set; }
     public bool Validate()
     {
@@ -63,6 +63,7 @@ public class ScreenshotConfig
 
         return true;
     }
+    public string FileExtension => Format.Equals("png", StringComparison.OrdinalIgnoreCase) ? ".png" : ".jpg";
 }
 public class BrowserConfig
 {

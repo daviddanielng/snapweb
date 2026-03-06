@@ -71,14 +71,24 @@ public class Start
             switch (browserConfig.Name)
             {
                 case "chromium":
-                    var chromium = await new Chromium(config).Start();
-                    if (chromium.Browser == null)
+
+                    var newDir = Path.Combine(outDir, "chromium");
+                    if (await Utils.CreateDirIfNotExists(newDir))
                     {
-                        Logging.Error("Failed to start Chromium browser.");
-                        return;
+                        var chromium = await new Chromium(config, !config.AnyHasPause).Start();
+                        if (chromium.Browser == null)
+                        {
+                            Logging.Error("Failed to start Chromium browser.");
+                            return;
+                        }
+                        await Roll(config, newDir, chromium.Browser);
+                        await chromium.Dispose();
                     }
-                    await Roll(config, outDir, chromium.Browser);
-                    await chromium.Dispose();
+                    else
+                    {
+                        Logging.Error($"Failed to create output directory for Chromium: {newDir}");
+                    }
+
                     break;
                 case "firefox":
                     throw new NotImplementedException("Firefox support is not implemented yet.");
@@ -91,7 +101,12 @@ public class Start
                     break;
             }
         }
-
+        Logging.Info("Processing completed.");
+        Logging.Raw(new Dictionary<string, string>
+        {
+            {"Type","Done"},
+            { "Output", outDir }
+        });
 
 
     }
@@ -108,7 +123,7 @@ public class Start
                 {
                     Url = url.Url,
                     Pause = url.Pause,
-                    IncludeFullPage = url.IncludeFullPage,
+                    IncludeFullPage = url.FullPage,
                     Caption = url.Caption
                 };
                 var path = await GenerateScreenShotFileName(info, outDir, screenConfig.Width, screenConfig.Height);
@@ -134,8 +149,8 @@ public class Start
                     }
                     await page.ScreenshotAsync(new Microsoft.Playwright.PageScreenshotOptions
                     {
-                        Path = path,
-                        FullPage = url.IncludeFullPage
+                        Path = path + config.ScreenshotOptions.FileExtension,
+                        FullPage = url.FullPage
                     });
                 }
                 catch (Exception ex)
@@ -162,10 +177,10 @@ public class Start
         {
             return null;
         }
-        var fileName = $"{width}x{height}.txt";
+        var fileName = $"{width}x{height}";
         var filePath = Path.Combine(dirPath, fileName);
 
-        // File.WriteAllText(filePath, $"URL: {info.Url}\nPause: {info.Pause}\nIncludeFullPage: {info.IncludeFullPage}\nCaption: {info.Caption}");
+
         return filePath;
     }
 

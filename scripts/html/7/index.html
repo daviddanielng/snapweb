@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Security Best Practices for Web Applications</title>
+    <link rel="stylesheet" href="../style.css" />
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <h1>Tech Insights</h1>
+        <p class="tagline">Exploring technology, development, and design</p>
+      </div>
+    </header>
+
+    <div class="container">
+      <article class="blog-post">
+        <h1>Security Best Practices for Web Applications</h1>
+        <span class="date">March 7, 2026 • 7 min read</span>
+
+        <p>
+          Security breaches make headlines regularly. Protecting your
+          application and users isn't optional—it's a fundamental
+          responsibility. Following security best practices prevents the most
+          common vulnerabilities.
+        </p>
+
+        <h2>Authentication Done Right</h2>
+        <p>
+          Never store passwords in plain text. Use bcrypt or Argon2 for password
+          hashing. These algorithms are designed to be slow, making brute force
+          attacks impractical.
+        </p>
+
+        <p>
+          Implement multi-factor authentication for sensitive operations. Use
+          secure session management with HTTP-only, secure cookies. Generate
+          cryptographically random session tokens and implement proper timeout
+          mechanisms.
+        </p>
+
+        <h2>Authorization and Access Control</h2>
+        <p>
+          Implement the principle of least privilege. Users should have only the
+          permissions they need, nothing more. Check authorization on every
+          request server-side—never trust client-side checks alone.
+        </p>
+
+        <p>
+          Use role-based access control (RBAC) for most applications. For
+          complex requirements, attribute-based access control (ABAC) provides
+          finer granularity. Document your permission model clearly.
+        </p>
+
+        <h2>Protecting Against Common Attacks</h2>
+        <p>
+          SQL injection remains prevalent despite being well-understood. Use
+          parameterized queries or an ORM. Never construct SQL with string
+          concatenation using user input.
+        </p>
+
+        <p>
+          Cross-site scripting (XSS) occurs when attackers inject malicious
+          scripts. Escape user input before rendering. Use Content Security
+          Policy headers to restrict script execution to trusted sources.
+        </p>
+
+        <p>
+          Cross-site request forgery (CSRF) tricks users into performing
+          unintended actions. Use CSRF tokens on state-changing requests.
+          Same-site cookie attributes provide additional protection.
+        </p>
+
+        <h2>Security Headers</h2>
+        <p>
+          Configure security headers properly. Strict-Transport-Security
+          enforces HTTPS. X-Content-Type-Options prevents MIME type sniffing.
+          X-Frame-Options protects against clickjacking.
+        </p>
+
+        <p>
+          Content Security Policy (CSP) is powerful but requires careful
+          configuration. Start with a restrictive policy and relax only as
+          needed. Use report-only mode initially to identify issues without
+          breaking functionality.
+        </p>
+
+        <h2>Keeping Dependencies Secure</h2>
+        <p>
+          Regularly update dependencies to patch security vulnerabilities. Use
+          tools like npm audit or Snyk to identify vulnerable packages. Enable
+          automated dependency updates with services like Dependabot.
+        </p>
+
+        <p>
+          Minimize dependencies. Every package increases your attack surface.
+          Review dependencies periodically and remove unused ones. Consider the
+          maintenance status and security track record of packages you adopt.
+        </p>
+
+        <h2>Security as a Process</h2>
+        <p>
+          Security isn't a one-time task—it's an ongoing process. Regular
+          security audits, penetration testing, and staying informed about new
+          vulnerabilities are essential practices.
+        </p>
+
+        <p>
+          Have an incident response plan. When a security issue arises, knowing
+          how to respond quickly minimizes damage. Regular backups and tested
+          recovery procedures are your safety net.
+        </p>
+      </article>
+
+      <a href="../index.html" class="back-link">← Back to Blog</a>
+    </div>
+
+    <footer>
+      <div class="container">
+        <p>&copy; 2026 Tech Insights Blog. All rights reserved.</p>
+      </div>
+    </footer>
+  </body>
+</html>

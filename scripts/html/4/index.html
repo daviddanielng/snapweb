@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Building Scalable APIs with REST and GraphQL</title>
+    <link rel="stylesheet" href="../style.css" />
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <h1>Tech Insights</h1>
+        <p class="tagline">Exploring technology, development, and design</p>
+      </div>
+    </header>
+
+    <div class="container">
+      <article class="blog-post">
+        <h1>Building Scalable APIs with REST and GraphQL</h1>
+        <span class="date">March 4, 2026 • 8 min read</span>
+
+        <p>
+          API design is crucial for modern applications. Whether you choose REST
+          or GraphQL, understanding the principles of scalable API architecture
+          will save you headaches as your application grows.
+        </p>
+
+        <h2>REST: The Time-Tested Approach</h2>
+        <p>
+          REST APIs have been the standard for web services for years. Their
+          simplicity and use of HTTP conventions make them easy to understand
+          and cache effectively.
+        </p>
+
+        <p>
+          A well-designed REST API uses proper HTTP verbs (GET, POST, PUT,
+          DELETE), returns appropriate status codes, and organizes resources
+          logically. Version your API from the start, and use semantic
+          versioning to manage changes.
+        </p>
+
+        <h2>GraphQL: Flexibility and Efficiency</h2>
+        <p>
+          GraphQL offers a different paradigm. Instead of multiple endpoints,
+          you have a single endpoint where clients specify exactly what data
+          they need. This eliminates over-fetching and under-fetching problems
+          common with REST.
+        </p>
+
+        <p>
+          The strongly-typed schema in GraphQL provides excellent documentation
+          and enables powerful development tools. Type safety catches errors
+          before they reach production.
+        </p>
+
+        <h2>Scalability Considerations</h2>
+        <p>
+          Regardless of which approach you choose, scalability requires careful
+          planning. Implement pagination for large datasets, use caching
+          strategically, and design for horizontal scaling from the beginning.
+        </p>
+
+        <p>
+          Rate limiting protects your API from abuse. Use authentication and
+          authorization to secure endpoints. Monitor API usage to identify
+          performance bottlenecks before they become problems.
+        </p>
+
+        <h2>Choosing the Right Approach</h2>
+        <p>
+          REST works well for public APIs, microservices, and applications with
+          straightforward data relationships. Its simplicity and caching
+          capabilities make it an excellent default choice.
+        </p>
+
+        <p>
+          GraphQL shines in complex applications where clients need flexibility
+          in data fetching. Mobile apps and SPAs particularly benefit from
+          reducing the number of requests and payload size.
+        </p>
+
+        <h2>Best Practices</h2>
+        <p>
+          Document your API thoroughly. Use tools like Swagger for REST or
+          GraphQL Playground for GraphQL. Provide examples, explain error
+          responses, and keep documentation up to date.
+        </p>
+
+        <p>
+          Test extensively. Write integration tests that verify API behavior,
+          not just individual functions. Use contract testing to ensure API
+          changes don't break client applications.
+        </p>
+      </article>
+
+      <a href="../index.html" class="back-link">← Back to Blog</a>
+    </div>
+
+    <footer>
+      <div class="container">
+        <p>&copy; 2026 Tech Insights Blog. All rights reserved.</p>
+      </div>
+    </footer>
+  </body>
+</html>
